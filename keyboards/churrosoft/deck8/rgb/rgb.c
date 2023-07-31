@@ -12,7 +12,8 @@ typedef struct _indicator_config_t {
 enum via_churro {
     id_caps_indicator_enabled    = 1,
     id_caps_indicator_brightness = 2,
-    id_caps_indicator_color      = 3
+    id_caps_indicator_color      = 3,
+    id_get_serial_no             = 0xcc
 };
 
 indicator_config leds_cfg[DYNAMIC_KEYMAP_LAYER_COUNT][RGB_MATRIX_LED_COUNT];
@@ -85,6 +86,15 @@ void churro_config_get_value(uint8_t *data) {
         case id_caps_indicator_color: {
             value_data[2] = leds_cfg[value_data[0]][value_data[1]].h;
             value_data[3] = leds_cfg[value_data[0]][value_data[1]].s;
+            break;
+        }
+        case id_get_serial_no: {
+            uint8_t UniqueID[8];
+            flash_get_unique_id(UniqueID);
+
+            for (size_t i = 0; i < 8; i++) {
+                value_data[2 + i] = UniqueID[i];
+            }
             break;
         }
     }
