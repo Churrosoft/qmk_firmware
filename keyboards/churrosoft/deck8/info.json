@@ -5,18 +5,18 @@
   "maintainer": "Polsaker",
   "usb": {
     "vid": "0xCBBC",
-    "device_version": "1.0.3"
+    "device_version": "1.0.4"
   },
   "build": {
     "lto": true
   },
   "features": {
+    "midi": true,
     "bootmagic": true,
     "console": false,
     "extrakey": true,
     "mousekey": true,
     "nkro": true
-
   },
   "processor": "RP2040",
   "bootloader": "rp2040",
