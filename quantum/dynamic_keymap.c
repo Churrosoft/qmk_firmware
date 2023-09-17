@@ -317,6 +317,15 @@ void dynamic_keymap_macro_send(uint8_t id) {
                 }
                 // Null terminate
                 data[3] = 0;
+            } else if (data[1] == SS_L_TAP_CODE || data[1] == SS_L_DOWN_CODE || data[1] == SS_L_UP_CODE) {
+                data[2] = eeprom_read_byte(p++);
+                data[3] = eeprom_read_byte(p++);
+                // Unexpected null, abort.
+                if (data[2] == 0 || data[3] == 0) {
+                    return;
+                }
+                // Null terminate
+                data[4] = 0;
             } else if (data[1] == SS_DELAY_CODE) {
                 // Get the number and '|'
                 // At most this is 4 digits plus '|'

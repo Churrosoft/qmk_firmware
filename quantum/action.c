@@ -1018,6 +1018,57 @@ __attribute__((weak)) void tap_code(uint8_t code) {
     tap_code_delay(code, code == KC_CAPS_LOCK ? TAP_HOLD_CAPS_DELAY : TAP_CODE_DELAY);
 }
 
+void unregister_l_code(uint16_t code) {
+    keyrecord_t record = {
+        .event =
+            {
+                .pressed = 0,
+            },
+    };
+
+
+    if (code == KC_NO) {
+        return;
+    #if defined(MIDI_ENABLE) && defined(MIDI_ADVANCED)
+    } else if (IS_MIDI_KEYCODE(code)) {
+        process_midi(code, &record);
+    #endif
+    #if (defined(RGBLIGHT_ENABLE) && !defined(RGBLIGHT_DISABLE_KEYCODES)) || (defined(RGB_MATRIX_ENABLE) && !defined(RGB_MATRIX_DISABLE_KEYCODES))
+    } else if (IS_RGB_KEYCODE(code)) {
+        process_rgb(code, &record);
+
+    #endif
+    }
+}
+
+void register_l_code(uint16_t code) {
+    keyrecord_t record = {
+        .event = {
+            .pressed = 1,
+        },
+    };
+
+    if (code == KC_NO) {
+        return;
+    #if defined(MIDI_ENABLE) && defined(MIDI_ADVANCED)
+    } else if (IS_MIDI_KEYCODE(code)) {
+        process_midi(code, &record);
+    #endif
+    #if (defined(RGBLIGHT_ENABLE) && !defined(RGBLIGHT_DISABLE_KEYCODES)) || (defined(RGB_MATRIX_ENABLE) && !defined(RGB_MATRIX_DISABLE_KEYCODES))
+    } else if (IS_RGB_KEYCODE(code)) {
+        process_rgb(code, &record);
+    #endif
+    }
+}
+
+void tap_l_code(uint16_t code) {
+    register_l_code(code);
+    for (uint16_t i = TAP_CODE_DELAY; i > 0; i--) {
+        wait_ms(1);
+    }
+    unregister_l_code(code);
+}
+
 /** \brief Adds the given physically pressed modifiers and sends a keyboard report immediately.
  *
  * \param mods A bitfield of modifiers to register.

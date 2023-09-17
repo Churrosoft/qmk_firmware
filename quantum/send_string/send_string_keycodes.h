@@ -420,6 +420,10 @@
 #define SS_DOWN_CODE 2
 #define SS_UP_CODE 3
 #define SS_DELAY_CODE 4
+// da long ones
+#define SS_L_TAP_CODE 9
+#define SS_L_DOWN_CODE 10
+#define SS_L_UP_CODE 11
 
 #define SS_TAP(keycode) "\1\1" SYMBOL_STR(keycode)
 #define SS_DOWN(keycode) "\1\2" SYMBOL_STR(keycode)

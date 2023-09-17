@@ -168,6 +168,20 @@ void send_string_with_delay(const char *string, uint8_t interval) {
                 // up
                 uint8_t keycode = *(++string);
                 unregister_code(keycode);
+            } else if (ascii_code == SS_L_TAP_CODE) { // long variant
+                // tap
+                uint16_t keycode = ((uint16_t) *(string + 1) << 8) | *(string + 2);
+
+                string += 2;
+                tap_l_code(keycode);
+            } else if (ascii_code == SS_L_DOWN_CODE) {
+                // down
+                uint16_t keycode = ((uint16_t) *(string + 1) << 8) | *(string + 2);
+                register_l_code(keycode);
+            } else if (ascii_code == SS_L_UP_CODE) {
+                // up
+                uint16_t keycode = ((uint16_t) *(string + 1) << 8) | *(string + 2);
+                unregister_l_code(keycode);
             } else if (ascii_code == SS_DELAY_CODE) {
                 // delay
                 int     ms      = 0;
