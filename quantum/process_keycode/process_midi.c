@@ -52,7 +52,7 @@ inline uint8_t compute_velocity(uint8_t setting) {
 }
 
 void midi_init(void) {
-    midi_config.octave              = QK_MIDI_OCTAVE_2 - MIDI_OCTAVE_MIN;
+    midi_config.octave              = QK_MIDI_OCTAVE_N2 - MIDI_OCTAVE_MIN;
     midi_config.transpose           = 0;
     midi_config.velocity            = 127;
     midi_config.channel             = 0;
@@ -241,6 +241,13 @@ bool process_midi(uint16_t keycode, keyrecord_t *record) {
             } else {
                 midi_send_pitchbend(&midi_device, midi_config.channel, 0);
                 dprintf("midi pitchbend channel:%d amount:%d\n", midi_config.channel, 0);
+            }
+            return false;
+
+        case MIDI_VOLUME_MIN ... MIDI_VOLUME_MAX:
+            if (record->event.pressed) {
+                midi_send_cc(&midi_device, midi_config.channel, 0x07, compute_velocity(keycode - MIDI_VOLUME_MIN));
+                dprintf("midi volume %d\n", compute_velocity(keycode - MIDI_VOLUME_MIN));
             }
             return false;
     };
